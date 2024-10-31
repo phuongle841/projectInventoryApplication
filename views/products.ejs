@@ -1,0 +1,16 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="/index.css" />
+    <title>Shop</title>
+  </head>
+  <body>
+    <h1>products</h1>
+    <%- include("partial/nav.ejs") %>
+    <div class="container">
+      <% products.forEach(function(product){ %>
+      <li>name: <%= product.name %> id: <%= product.id %></li>
+      <li><a href="/products/<%= product.id %>">balls</a></li>
+      <% }); %>
+    </div>
+  </body>
+</html>

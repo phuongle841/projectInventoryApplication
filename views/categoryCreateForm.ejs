@@ -1,0 +1,19 @@
+<html>
+  <header><link rel="stylesheet" href="/index.css" /></header>
+  <body>
+    <div class="container">
+      <p>previous categories</p>
+      <% categories.forEach(function(category){ %>
+      <li>
+        <button>
+          <a href="/categories/<%= category.id %>"><%= category.name %></a>
+        </button>
+      </li>
+      <% }); %>
+    </div>
+    <form action="/categories/create" method="post">
+      <input type="text" name="name" id="name" />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

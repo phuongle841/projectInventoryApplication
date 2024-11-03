@@ -35,12 +35,21 @@ INSERT INTO product (name)
 VALUES
   ('cookers'),
   ('apples'),
-  ('computers');
+  ('DishWashers'),
+  ('Vacuum cleaners'),
+  ('Kitchen stove'),
+  ('computers'),
+  ('To Kill a Mockingbird'),
+  ('The Great Gatsby'),
+  ('The Lord of the Rings'),
+  ('Price and Prejudice')
+  ;
 
 INSERT INTO category (name) 
 VALUES
   ('home appliances'),
   ('fruits'),
+  ('books'),
   ('components');
 
 INSERT INTO seller (name) 
@@ -53,13 +62,27 @@ INSERT INTO category_product (category_id,product_id)
 VALUES
   (1,1),
   (2,2),
-  (3,3);
+  (3,3),
+  (1,4),
+  (1,5),
+  (1,6),
+  (4,7),
+  (4,8),
+  (4,9),
+  (4,10)
+  ;
 
 INSERT INTO seller_product (seller_id,product_id) 
 VALUES
   (1,1),
   (2,2),
-  (3,3);
+  (3,3),
+  (3,7),
+  (3,8),
+  (3,9),
+  (3,10) 
+  ;
+
 `;
 
 async function main() {

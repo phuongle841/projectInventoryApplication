@@ -4,7 +4,14 @@
     <title>Shop</title>
   </head>
   <body>
-    <h1>sellers</h1>
+    <h1>Sellers</h1>
     <%- include("partial/nav.ejs") %>
+    <div class="container">
+      <% sellers.forEach((seller)=>{ %>
+      <li>
+        <a href="/sellers/<%= seller.id %>"> <%= seller.name %> </a>
+      </li>
+      <%}); %>
+    </div>
   </body>
 </html>

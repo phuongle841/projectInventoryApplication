@@ -1,0 +1,17 @@
+<html>
+  <header>
+    <title>Category in shop</title><link rel="stylesheet" href="/index.css" />
+  </header>
+  <body>
+    <h1>Category</h1>
+    <%- include("partial/nav.ejs") %>
+    <div class="container">
+      <% categories.forEach(function(category){ %>
+      <li>
+        <a href="/categories/<%= category.id %>"><%= category.name %></a>
+      </li>
+      <% }); %>
+    </div>
+    <a href="/categories/create">create more categories</a>
+  </body>
+</html>

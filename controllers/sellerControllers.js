@@ -10,3 +10,14 @@ exports.getSellerWith = async (req, res) => {
   const products = await db.getSellerWith(id);
   res.render("sellerPage", { products: products });
 };
+
+exports.getCreateSeller = async (req, res) => {
+  const sellers = await db.getSellers();
+  res.render("sellerCreateForm", { sellers: sellers });
+};
+
+exports.postCreateSeller = async (req, res) => {
+  const { name } = req.body;
+  await db.postSeller(name);
+  res.redirect("/sellers");
+};

@@ -2,13 +2,12 @@ const db = require("../db/queries");
 
 exports.getCategories = async (req, res) => {
   const categories = await db.getCategories();
-  res.render("category", { categories: categories });
+  res.render("categories", { categories: categories });
 };
 
 exports.getCategoriesWith = async (req, res) => {
   const { id } = req.params;
   const products = await db.getCategoriesWith(id);
-
   if (products.length != 0) {
     res.render("categoryPage", { products: products });
   } else {
@@ -24,5 +23,5 @@ exports.getCreateCategory = async (req, res) => {
 exports.postCreateCategory = async (req, res) => {
   const { name } = req.body;
   await db.postCategory(name);
-  await res.redirect("/categories");
+  res.redirect("/categories");
 };

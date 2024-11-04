@@ -1,7 +1,7 @@
 const pool = require("./pool");
 
 async function getProducts() {
-  const { rows } = await pool.query(`select * from product;`);
+  const { rows } = await pool.query(`select id,name from product;`);
   return rows;
 }
 
@@ -24,6 +24,24 @@ WHERE product.id  = ($1);
     [id]
   );
   return rows;
+}
+
+async function postProduct(name) {
+  await pool.query(`INSERT INTO category (name) VALUES ($1)`, [name]);
+}
+
+async function postProductCategory(idProduct, idCategory) {
+  await pool.query(
+    `INSERT INTO category_product (category_id, product_id) VALUES ($1,$2)`,
+    [idCategory, idProduct]
+  );
+}
+
+async function postProductSeller(idProduct, idSeller) {
+  await pool.query(
+    `INSERT INTO category_product (seller_id, product_id) VALUES ($1,$2)`,
+    [idSeller, idProduct]
+  );
 }
 
 async function getCategories() {
@@ -52,7 +70,7 @@ WHERE category.id = ($1);
 }
 
 async function getSellers() {
-  const { rows } = await pool.query(`SELECT * FROM seller;`);
+  const { rows } = await pool.query(`SELECT id,name FROM seller;`);
   return rows;
 }
 
@@ -73,12 +91,20 @@ WHERE seller.id  = ($1);
   return rows;
 }
 
+async function postSeller(name) {
+  await pool.query(`INSERT INTO seller (name) VALUES ($1)`, [name]);
+}
+
 module.exports = {
   getProducts,
+  postProduct,
+  postProductCategory,
+  postProductSeller,
   getProductWith,
   getCategories,
   postCategory,
   getCategoriesWith,
   getSellers,
   getSellerWith,
+  postSeller,
 };

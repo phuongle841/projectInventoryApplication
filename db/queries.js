@@ -5,20 +5,31 @@ async function getProducts() {
   return rows;
 }
 
-async function getProductWith(id) {
+async function getProductCategory(id) {
   const { rows } = await pool.query(
     `
-SELECT product.id, product.name as products, 
-seller.name as sellers, category.name as categories
+SELECT category.id, category.name as name
+FROM product
+INNER JOIN category_product
+ON product.id = category_product.product_id
+INNER JOIN category
+ON category.id = category_product.category_id
+WHERE product.id  = ($1);
+`,
+    [id]
+  );
+  return rows;
+}
+
+async function getProductSeller(id) {
+  const { rows } = await pool.query(
+    `
+SELECT seller.id, seller.name as name
 FROM product
 INNER JOIN seller_product
 ON product.id = seller_product.product_id
 INNER JOIN seller
-ON seller.id = seller_product.seller_id 
-INNER JOIN category_product
-ON product.id = category_product.product_id 
-INNER JOIN category
-ON category_product.product_id= category.id 
+ON seller.id = seller_product.seller_id
 WHERE product.id  = ($1);
 `,
     [id]
@@ -27,21 +38,39 @@ WHERE product.id  = ($1);
 }
 
 async function postProduct(name) {
-  await pool.query(`INSERT INTO category (name) VALUES ($1)`, [name]);
+  let { rows } = await pool.query(
+    `INSERT INTO product (name) VALUES ($1) RETURNING id`,
+    [name]
+  );
+  return rows[0].id;
 }
 
-async function postProductCategory(idProduct, idCategory) {
-  await pool.query(
-    `INSERT INTO category_product (category_id, product_id) VALUES ($1,$2)`,
-    [idCategory, idProduct]
-  );
+async function postProductCategory(idProduct, idCategories) {
+  for (let i = 0; i < idCategories.length; i++) {
+    const idCategory = idCategories[i];
+    await pool.query(
+      `INSERT INTO category_product (category_id, product_id) VALUES ($1,$2)`,
+      [idCategory, idProduct]
+    );
+  }
 }
 
-async function postProductSeller(idProduct, idSeller) {
-  await pool.query(
-    `INSERT INTO category_product (seller_id, product_id) VALUES ($1,$2)`,
-    [idSeller, idProduct]
-  );
+async function postProductSeller(idProduct, idSellers) {
+  for (let i = 0; i < idSellers.length; i++) {
+    const idSeller = idSellers[i];
+    await pool.query(
+      `INSERT INTO seller_product (seller_id, product_id) VALUES ($1,$2)`,
+      [idSeller, idProduct]
+    );
+  }
+}
+
+async function postUpdateProduct(idProduct, idSellers) {
+  for (let i = 0; i < idSellers.length; i++) {
+    const idSeller = idSellers[i];
+    // delete all the old ones
+    // insert the new ones into there
+  }
 }
 
 async function getCategories() {
@@ -54,9 +83,10 @@ async function postCategory(name) {
 }
 
 async function getCategoriesWith(id) {
+  // return product with the same category id
   const { rows } = await pool.query(
     `
-SELECT product.id, product.name as product_name, category.name as category_name
+SELECT product.id, product.name as name
 FROM category
 INNER JOIN category_product
 ON category.id = category_product.category_id
@@ -75,6 +105,8 @@ async function getSellers() {
 }
 
 async function getSellerWith(id) {
+  // return products with the same seller id
+
   const { rows } = await pool.query(
     `
 SELECT product.id, product.name as product_name, 
@@ -100,7 +132,8 @@ module.exports = {
   postProduct,
   postProductCategory,
   postProductSeller,
-  getProductWith,
+  getProductCategory,
+  getProductSeller,
   getCategories,
   postCategory,
   getCategoriesWith,

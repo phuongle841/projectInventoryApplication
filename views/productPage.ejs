@@ -6,14 +6,22 @@
     <h1>Product</h1>
     <%- include("partial/nav.ejs") %>
     <div class="container">
-      <p>Product name: <%= product.products %></p>
-      <p>Seller <%= product.sellers %></p>
-      <p>Belong to category: <%= product.categories %></p>
+      <h1>Categories</h1>
+      <% categories.forEach(function(category){ %>
+      <li>
+        <a href="/categories/<%= category.id %>"><%= category.name %></a>
+      </li>
+      <% }); %>
+      <h1>Sellers</h1>
+      <% sellers.forEach(function(seller){ %>
+      <li>
+        <a href="/sellers/<%= seller.id %>"><%= seller.name %></a>
+      </li>
+      <% }); %>
     </div>
-    <div class="test">
-      <% for(const [index,data] of Object.entries(product)){ %>
-      <li><%= index %> is <a href="/<%=index%>/"></a><%= data %></li>
-      <% } %>
+    <div>
+      <button><a href="/products/<%= id %>/update">Update</a></button
+      ><button>delete</button>
     </div>
   </body>
 </html>

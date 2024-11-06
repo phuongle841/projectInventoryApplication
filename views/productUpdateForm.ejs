@@ -1,9 +1,9 @@
 <html>
   <header><link rel="stylesheet" href="/index.css" /></header>
   <body>
-    <h1>Create more products</h1>
+    <h1>Update this products</h1>
     <%- include("partial/nav.ejs") %>
-    <form action="/products/create" method="post">
+    <form action="/products/<%= id %>/update" method="post">
       <fieldset>
         <legend>Categories</legend>
         <% categories.forEach(function(category){ %>
@@ -23,14 +23,16 @@
         <legend>Sellers</legend>
         <% sellers.forEach(function(seller){ %>
         <div>
-          <input type="checkbox" name="sellers" id="<%= seller.id %>"
-          value="<%=seller.id %>" <%= (seller.id === 1 ) ? 'checked' : '' %> />
+          <input
+            type="checkbox"
+            name="sellers"
+            id="<%= seller.id %>"
+            value="<%=seller.id %>"
+          />
           <label for="<%= seller.id %>"><%= seller.name %></label>
         </div>
         <% }); %>
       </fieldset>
-
-      <input type="text" name="name" id="name" required />
       <button type="submit">Submit</button>
     </form>
   </body>

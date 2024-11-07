@@ -65,12 +65,50 @@ async function postProductSeller(idProduct, idSellers) {
   }
 }
 
-async function postUpdateProduct(idProduct, idSellers) {
+async function postUpdateProductCategory(idProduct, idCategories) {
+  // delete all the old ones
+  await pool.query(
+    `
+    DELETE FROM category_product WHERE product_id = $1;
+    `,
+    [idProduct]
+  );
+  for (let i = 0; i < idCategories.length; i++) {
+    const idCategory = idCategories[i];
+    // insert the new ones into there
+    await pool.query(
+      `INSERT INTO category_product (category_id, product_id) VALUES ($1,$2)`,
+      [idCategory, idProduct]
+    );
+  }
+}
+
+async function postUpdateProductSeller(idProduct, idSellers) {
+  // delete all the old ones
+  await pool.query(
+    `
+    DELETE FROM seller_product WHERE product_id = $1;
+    `,
+    [idProduct]
+  );
   for (let i = 0; i < idSellers.length; i++) {
     const idSeller = idSellers[i];
-    // delete all the old ones
     // insert the new ones into there
+    await pool.query(
+      `INSERT INTO seller_product (seller_id, product_id) VALUES ($1,$2)`,
+      [idSeller, idProduct]
+    );
   }
+}
+
+async function postDeleteProduct(idProduct) {
+  await pool.query("DELETE FROM seller_product WHERE product_id = $1;", [
+    idProduct,
+  ]);
+  await pool.query("DELETE FROM category_product WHERE product_id = $1;", [
+    idProduct,
+  ]);
+  await pool.query("DELETE FROM product WHERE id = $1;", [idProduct]);
 }
 
 async function getCategories() {
@@ -134,6 +172,9 @@ module.exports = {
   postProductSeller,
   getProductCategory,
   getProductSeller,
+  postUpdateProductCategory,
+  postUpdateProductSeller,
+  postDeleteProduct,
   getCategories,
   postCategory,
   getCategoriesWith,

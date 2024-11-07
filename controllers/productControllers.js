@@ -23,9 +23,6 @@ exports.getCreateProduct = async (req, res) => {
 };
 
 exports.getUpdateProduct = async (req, res) => {
-  // return an display of old object
-  // and a list of the things
-  // reedit the thing in database
   const { id } = req.params;
   const sellers = await db.getSellers();
   const categories = await db.getCategories();
@@ -34,6 +31,10 @@ exports.getUpdateProduct = async (req, res) => {
     sellers: sellers,
     id: id,
   });
+};
+exports.getDeleteProduct = async (req, res) => {
+  const { id } = req.params;
+  res.render("productDeleteForm", { id: id });
 };
 
 exports.postCreateProduct = async (req, res) => {
@@ -46,7 +47,14 @@ exports.postCreateProduct = async (req, res) => {
 
 exports.postUpdateProduct = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
-
+  const { sellers, categories } = req.body;
+  await db.postUpdateProductCategory(id, categories);
+  await db.postUpdateProductSeller(id, sellers);
   res.redirect(`/products/${id}`);
+};
+
+exports.postDeleteProduct = async (req, res) => {
+  const { id } = req.params;
+  db.postDeleteProduct(id);
+  res.redirect("/products");
 };

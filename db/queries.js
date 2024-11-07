@@ -101,18 +101,14 @@ async function postUpdateProductSeller(idProduct, idSellers) {
   }
 }
 
-async function postDeleteProduct(idProduct) {
-  await pool.query("DELETE FROM seller_product WHERE product_id = $1;", [
-    idProduct,
-  ]);
-  await pool.query("DELETE FROM category_product WHERE product_id = $1;", [
-    idProduct,
-  ]);
-  await pool.query("DELETE FROM product WHERE id = $1;", [idProduct]);
+async function postDeleteProduct(id) {
+  await pool.query("DELETE FROM seller_product WHERE product_id = $1;", [id]);
+  await pool.query("DELETE FROM category_product WHERE product_id = $1;", [id]);
+  await pool.query("DELETE FROM product WHERE id = $1;", [id]);
 }
 
 async function getCategories() {
-  const { rows } = await pool.query(`SELECT id,name FROM category`);
+  const { rows } = await pool.query(`SELECT id,name FROM category ORDER BY id`);
   return rows;
 }
 
@@ -120,7 +116,7 @@ async function postCategory(name) {
   await pool.query(`INSERT INTO category (name) VALUES ($1)`, [name]);
 }
 
-async function getCategoriesWith(id) {
+async function getCategoryProducts(id) {
   // return product with the same category id
   const { rows } = await pool.query(
     `
@@ -136,13 +132,28 @@ WHERE category.id = ($1);
   );
   return rows;
 }
+async function getCategoryInformation(id) {
+  const { rows } = await pool.query("SELECT * FROM category WHERE id = $1", [
+    id,
+  ]);
+  return rows;
+}
+
+async function postCategoryInformation(id, name) {
+  await pool.query(`UPDATE category SET name  = $1 WHERE id = $2;`, [name, id]);
+}
+
+async function postDeleteCategory(id) {
+  await pool.query("DELETE FROM category_product WHERE id = $1;", [id]);
+  await pool.query("DELETE FROM category WHERE id = $1;", [id]);
+}
 
 async function getSellers() {
   const { rows } = await pool.query(`SELECT id,name FROM seller;`);
   return rows;
 }
 
-async function getSellerWith(id) {
+async function getSellerProducts(id) {
   // return products with the same seller id
 
   const { rows } = await pool.query(
@@ -161,8 +172,22 @@ WHERE seller.id  = ($1);
   return rows;
 }
 
+async function getSellersInformation(id) {
+  const { rows } = await pool.query("SELECT * FROM seller WHERE id = $1", [id]);
+  return rows;
+}
+
 async function postSeller(name) {
   await pool.query(`INSERT INTO seller (name) VALUES ($1)`, [name]);
+}
+
+async function postSellerInformation(id, name) {
+  await pool.query(`UPDATE seller SET name  = $1 WHERE id = $2;`, [name, id]);
+}
+
+async function postDeleteSeller(id) {
+  await pool.query("DELETE FROM seller_product WHERE seller_id = $1;", [id]);
+  await pool.query("DELETE FROM seller WHERE id = $1;", [id]);
 }
 
 module.exports = {
@@ -177,8 +202,14 @@ module.exports = {
   postDeleteProduct,
   getCategories,
   postCategory,
-  getCategoriesWith,
+  getCategoryProducts,
+  getCategoryInformation,
+  postCategoryInformation,
+  postDeleteCategory,
   getSellers,
-  getSellerWith,
   postSeller,
+  getSellerProducts,
+  getSellersInformation,
+  postSellerInformation,
+  postDeleteSeller,
 };

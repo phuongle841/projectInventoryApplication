@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="/index.css" />
   </head>
   <body>
-    <h1><%= products[0].seller_name %></h1>
+    <h1><%= name %></h1>
     <%- include("partial/nav.ejs") %>
     <div class="container">
       <% products.forEach((product)=>{ %>
@@ -12,5 +12,7 @@
       </li>
       <% }); %>
     </div>
+    <a href="/sellers/<%= id %>/update">update</a>
+    <a href="/sellers/<%= id %>/delete">delete</a>
   </body>
 </html>

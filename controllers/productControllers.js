@@ -55,6 +55,6 @@ exports.postUpdateProduct = async (req, res) => {
 
 exports.postDeleteProduct = async (req, res) => {
   const { id } = req.params;
-  db.postDeleteProduct(id);
+  await db.postDeleteProduct(id);
   res.redirect("/products");
 };

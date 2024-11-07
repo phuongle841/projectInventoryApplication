@@ -5,10 +5,11 @@ exports.getSellers = async (req, res) => {
   res.render("sellers", { sellers: sellers });
 };
 
-exports.getSellerWith = async (req, res) => {
+exports.getSellerProducts = async (req, res) => {
   const { id } = req.params;
-  const products = await db.getSellerWith(id);
-  res.render("sellerPage", { products: products });
+  const products = await db.getSellerProducts(id);
+  const [{ name }] = await db.getSellersInformation(id);
+  res.render("sellerPage", { products: products, id: id, name: name });
 };
 
 exports.getCreateSeller = async (req, res) => {
@@ -16,8 +17,32 @@ exports.getCreateSeller = async (req, res) => {
   res.render("sellerCreateForm", { sellers: sellers });
 };
 
+exports.getUpdateSeller = async (req, res) => {
+  const { id } = req.params;
+  const [information] = await db.getSellersInformation(id);
+  res.render("sellerUpdateForm", { information: information, id: id });
+};
+
+exports.getDeleteSeller = async (req, res) => {
+  const { id } = req.params;
+  res.render("sellerDeleteForm", { id: id });
+};
+
 exports.postCreateSeller = async (req, res) => {
   const { name } = req.body;
   await db.postSeller(name);
+  res.redirect("/sellers");
+};
+
+exports.postUpdateSeller = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  await db.postSellerInformation(id, name);
+  res.redirect("/sellers");
+};
+
+exports.postDeleteSeller = async (req, res) => {
+  const { id } = req.params;
+  await db.postDeleteSeller(id);
   res.redirect("/sellers");
 };

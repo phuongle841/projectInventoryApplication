@@ -1,0 +1,19 @@
+<html>
+  <header><link rel="stylesheet" href="/index.css" /></header>
+  <body>
+    <h1>Update this category</h1>
+    <%- include("partial/nav.ejs") %>
+    <form action="/categories/<%= id %>/update" method="post">
+      <fieldset>
+        <legend>Name</legend>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          value="<%= information.name %>"
+        />
+      </fieldset>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>

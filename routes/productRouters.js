@@ -2,6 +2,7 @@ const { Router } = require("express");
 const productController = require("../controllers/productControllers");
 const productRouter = Router();
 
+// alphabetical order
 productRouter.post("/create", productController.postCreateProduct);
 productRouter.get("/create", productController.getCreateProduct);
 

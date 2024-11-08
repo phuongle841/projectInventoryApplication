@@ -5,6 +5,17 @@ async function getProducts() {
   return rows;
 }
 
+async function getProductInformation(id) {
+  const { rows } = await pool.query("SELECT * FROM product WHERE id = $1", [
+    id,
+  ]);
+  return rows;
+}
+
+async function postProductInformation(id, name) {
+  await pool.query(`UPDATE product SET name  = $1 WHERE id = $2;`, [name, id]);
+}
+
 async function getProductCategory(id) {
   const { rows } = await pool.query(
     `
@@ -192,6 +203,8 @@ async function postDeleteSeller(id) {
 
 module.exports = {
   getProducts,
+  getProductInformation,
+  postProductInformation,
   postProduct,
   postProductCategory,
   postProductSeller,

@@ -19,17 +19,22 @@ exports.getProductWith = async (req, res) => {
 exports.getCreateProduct = async (req, res) => {
   const sellers = await db.getSellers();
   const categories = await db.getCategories();
-  res.render("productCreateForm", { categories: categories, sellers: sellers });
+  res.render("productCreateForm", {
+    categories: categories,
+    sellers: sellers,
+  });
 };
 
 exports.getUpdateProduct = async (req, res) => {
   const { id } = req.params;
   const sellers = await db.getSellers();
   const categories = await db.getCategories();
+  const [information] = await db.getProductInformation(id);
   res.render("productUpdateForm", {
     categories: categories,
     sellers: sellers,
     id: id,
+    information: information,
   });
 };
 exports.getDeleteProduct = async (req, res) => {
@@ -47,10 +52,11 @@ exports.postCreateProduct = async (req, res) => {
 
 exports.postUpdateProduct = async (req, res) => {
   const { id } = req.params;
-  const { sellers, categories } = req.body;
+  const { sellers, categories, name } = req.body;
+  await db.postProductInformation(id, name);
   await db.postUpdateProductCategory(id, categories);
   await db.postUpdateProductSeller(id, sellers);
-  res.redirect(`/products/${id}`);
+  res.redirect(`/products`);
 };
 
 exports.postDeleteProduct = async (req, res) => {
